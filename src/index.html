@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Text analyzer</title>
+
+    <script type="module" src="main.js"></script>
+    <style>
+        .light {
+            color: #0366b1;
+        }
+
+        .medium {
+            color: #6e03b1;
+        }
+
+        .complex {
+            color: #b10303;
+        }
+    </style>
+</head>
+<body>
+
+<textarea id="input-text" rows="20" style="width: 100%"></textarea>
+
+<div style="display: flex">
+    <div>
+        <h4>Words:</h4>
+        <div id="result"></div>
+    </div>
+    <div>
+        <h4>Nouns:</h4>
+        <div id="nouns"></div>
+    </div>
+    <div>
+        <h4>Verbs:</h4>
+        <div id="verbs"></div>
+    </div>
+</div>
+
+</body>
+</html>
