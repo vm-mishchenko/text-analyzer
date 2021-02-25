@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Text analyzer</title>
-
-    <script type="module" src="main.js"></script>
-    <style>
-        .light {
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><title>Text analyzer</title><style>.light {
             color: #0366b1;
         }
 
@@ -17,26 +9,25 @@
         .complex {
             color: #b10303;
         }
-    </style>
-<script defer src="main.js"></script></head>
-<body>
 
-<textarea id="input-text" rows="20" style="width: 100%"></textarea>
+        .easy {
+            color: #39a30d;
+        }
 
-<div style="display: flex">
-    <div>
-        <h4>Words:</h4>
-        <div id="result"></div>
-    </div>
-    <div>
-        <h4>Nouns:</h4>
-        <div id="nouns"></div>
-    </div>
-    <div>
-        <h4>Verbs:</h4>
-        <div id="verbs"></div>
-    </div>
-</div>
+        .item + .item {
+            margin-left: 2%;
+        }
 
-</body>
-</html>
+        li {
+            padding: 10px 0;
+            border-bottom: 1px solid #d4d4d4;
+            display: flex;
+        }
+
+        .phrase {
+            width: 80%;
+        }
+
+        .word {
+            width: 200px;
+        }</style><script defer="defer" src="main.js"></script></head><body><div style="display: flex"><textarea id="input-text" rows="20" style="width: 20%"></textarea><div style="display: flex; flex-grow: 1;"><div id="table" style="flex-grow: 1;"></div></div></div></body></html>
