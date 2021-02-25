@@ -6,88 +6,132 @@ const FREQUENCY_MAP = require('./frequency-map.json');
 */
 
 const inputText = document.getElementById("input-text");
-const allWordsContainer = document.getElementById("result");
-const nounsContainer = document.getElementById("nouns");
-const verbsContainer = document.getElementById("verbs");
+const tableContainer = document.getElementById("table");
+let terms = [];
+
+tableContainer.addEventListener('click', (e) => {
+  if (e.target.getAttribute("id") === "translate") {
+    const selectedTerm = terms.find((term) => {
+      return term.id === e.target.dataset.id;
+    });
+
+    window.open(`https://translate.google.com/?text=${selectedTerm.phrase}`);
+  }
+
+  if (e.target.getAttribute("id") === "youglish") {
+    const selectedTerm = terms.find((term) => {
+      return term.id === e.target.dataset.id;
+    });
+
+    window.open(`https://youglish.com/pronounce/${selectedTerm.text}/english/us`);
+  }
+});
 
 inputText.addEventListener('input', function () {
   const doc = nlp(inputText.value);
+  const allTerms = doc.json().reduce((result, phrase) => {
+    const terms = phrase.terms.reduce((termsResult, term) => {
+      termsResult.push({
+        text: term.text,
+        tags: term.tags,
+        phrase: phrase.text
+      });
 
-  const nouns = enrichWords(filterWords(filterTerms(doc.nouns().unique().trim().normalize().json())));
-  const verbs = enrichWords(filterWords(filterTerms(doc.verbs().unique().trim().normalize().json())));
-  const allWords = enrichWords(filterWords(filterTerms(doc.terms().unique().trim().normalize().json())));
+      return termsResult;
+    }, []);
 
-  print(sortEnrichedWords(allWords), allWordsContainer);
-  print(sortEnrichedWords(nouns), nounsContainer);
-  print(sortEnrichedWords(verbs), verbsContainer);
+    result = result.concat(terms);
+
+    return result;
+  }, []);
+
+  terms = sortTerms(
+    enrichTerms(
+      filterTerms(
+        prettifyTerms(
+          allTerms
+        )
+      )
+    )
+  );
+
+  print(terms, tableContainer);
 });
 
-function filterTerms(terms) {
+function prettifyTerms(terms) {
   return terms.map((term) => {
     // remove all "." symbols after text
     term.text = term.text.replace(/\.*$/, '');
     // remove all "?" symbols after text
     term.text = term.text.replace(/\?*$/, '');
+
     return term;
-  })
+  });
+}
+
+function filterTerms(terms) {
+  return terms
     .filter((term) => {
       // 3 symbol minimum in text
-      return term.text.length > 2 && term.text.length < 6;
+      return term.text.length > 2;
     })
     .filter((term) => {
       // only letter allowed
       return /^[a-zA-Z]+$/.test(term.text);
-    })
-    .map((term) => {
-      return term.text.toLowerCase();
-    });
-}
-
-function filterWords(words) {
-  return words
-    .filter((word) => {
+    }).filter((term) => {
       // remove words that is NOT in frequency map
-      return Boolean(FREQUENCY_MAP[word]);
+      return Boolean(FREQUENCY_MAP[term.text.toLowerCase()]);
     });
 }
 
-function enrichWords(words) {
-  return words
-    .map((word) => {
+function enrichTerms(terms) {
+  return terms
+    .map((term) => {
       return {
-        word,
-        ...FREQUENCY_MAP[word]
+        id: String(Math.random()).slice(2),
+        ...term,
+        ...FREQUENCY_MAP[term.text.toLowerCase()]
       }
     });
 }
 
-function sortEnrichedWords(enrichedWords) {
-  return enrichedWords.sort((a, b) => {
+function sortTerms(terms) {
+  return terms.sort((a, b) => {
     return a.position < b.position ? 1 : -1;
   });
 }
 
-function print(sortedWordsWithMetadata, container) {
+function print(terms, container) {
   const fr = document.createDocumentFragment();
   const ul = document.createElement("UL");
   fr.append(ul);
 
-  sortedWordsWithMetadata.forEach(wordWithMetadata => {
+  terms.forEach(term => {
     const li = document.createElement("LI");
 
-    if (wordWithMetadata.word === wordWithMetadata.original) {
-      li.textContent = `${wordWithMetadata.position}: ${wordWithMetadata.original}`;
+    let frequency;
+    if (term.position > 50000) {
+      frequency = 'complex';
+    } else if (term.position > 20000) {
+      frequency = 'medium';
+    } else if (term.position > 10000) {
+      frequency = 'light';
     } else {
-      li.textContent = `${wordWithMetadata.position}: ${wordWithMetadata.original} (${wordWithMetadata.word})`;
+      frequency = 'easy';
     }
 
-    if (wordWithMetadata.position > 50000) {
-      li.classList.add('complex');
-    } else if (wordWithMetadata.position > 20000) {
-      li.classList.add('medium');
-    } else if (wordWithMetadata.position > 10000) {
-      li.classList.add('light');
-    }
+    const phrase = term.phrase.replace(term.text, `<span style="font-weight: bold" class="${frequency}">${term.text}</span>`);
+
+    li.innerHTML = `
+      <div class="item word ${frequency}">${term.original}</div>
+      <div class="item button">
+          <button id="translate" data-id="${term.id}">translate</button>
+      </div>
+      <div class="item button">
+          <button id="youglish" data-id="${term.id}">youglish</button>
+      </div>
+      <div class="item phrase">${phrase}</div>
+    `;
 
     ul.append(li);
   });
