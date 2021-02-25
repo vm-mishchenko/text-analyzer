@@ -7,10 +7,22 @@ const FREQUENCY_MAP = require('./frequency-map.json');
 
 const inputText = document.getElementById("input-text");
 const tableContainer = document.getElementById("table");
+const maxWordLengthInput = document.getElementById("max-word-length");
+const filters = {
+  maxWordLength: 10
+};
 let terms = [];
 
 tableContainer.addEventListener('click', (e) => {
-  if (e.target.getAttribute("id") === "translate") {
+  if (e.target.getAttribute("id") === "translate-word") {
+    const selectedTerm = terms.find((term) => {
+      return term.id === e.target.dataset.id;
+    });
+
+    window.open(`https://translate.google.com/?text=${selectedTerm.text}`);
+  }
+
+  if (e.target.getAttribute("id") === "translate-phrase") {
     const selectedTerm = terms.find((term) => {
       return term.id === e.target.dataset.id;
     });
@@ -27,7 +39,13 @@ tableContainer.addEventListener('click', (e) => {
   }
 });
 
-inputText.addEventListener('input', function () {
+inputText.addEventListener('input', reRender);
+maxWordLengthInput.addEventListener('input', function () {
+  filters.maxWordLength = maxWordLengthInput.value || 100;
+  reRender();
+});
+
+function reRender() {
   const doc = nlp(inputText.value);
   const allTerms = doc.json().reduce((result, phrase) => {
     const terms = phrase.terms.reduce((termsResult, term) => {
@@ -56,7 +74,7 @@ inputText.addEventListener('input', function () {
   );
 
   print(terms, tableContainer);
-});
+}
 
 function prettifyTerms(terms) {
   return terms.map((term) => {
@@ -73,7 +91,7 @@ function filterTerms(terms) {
   return terms
     .filter((term) => {
       // 3 symbol minimum in text
-      return term.text.length > 2;
+      return term.text.length > 2 && term.text.length <= filters.maxWordLength;
     })
     .filter((term) => {
       // only letter allowed
@@ -125,7 +143,8 @@ function print(terms, container) {
     li.innerHTML = `
       <div class="item word ${frequency}">${term.original}</div>
       <div class="item button">
-          <button id="translate" data-id="${term.id}">translate</button>
+          <button id="translate-word" data-id="${term.id}">word</button>
+          <button id="translate-phrase" data-id="${term.id}">phrase</button>
       </div>
       <div class="item button">
           <button id="youglish" data-id="${term.id}">youglish</button>

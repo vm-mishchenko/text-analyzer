@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "webpack",
+    "build": "webpack --mode=production",
     "start": "webpack serve --open",
     "rebuild-frequency-map": "node scripts/dictionary-text-to-json.js",
     "clean": "rm -rf node_modules/.cache/gh-pages"
