@@ -24,10 +24,14 @@
             display: flex;
         }
 
+        .button {
+            display: flex;
+        }
+
         .phrase {
             width: 80%;
         }
 
         .word {
             width: 200px;
-        }</style><script defer="defer" src="main.js"></script></head><body><div style="display: flex"><textarea id="input-text" rows="20" style="width: 20%"></textarea><div style="display: flex; flex-grow: 1;"><div id="table" style="flex-grow: 1;"></div></div></div></body></html>
+        }</style><script defer="defer" src="main.js"></script></head><body><div style="display: flex"><textarea id="input-text" rows="20" style="width: 20%"></textarea><div style="display: flex; flex-grow: 1; flex-direction: column;"><div><div>Max word length: <input type="number" id="max-word-length"></div></div><div id="table" style="flex-grow: 1;"></div></div></div></body></html>
