@@ -1,17 +1,17 @@
-<!doctype html><html lang="en"><head><meta charset="UTF-8"><title>Text analyzer</title><style>.light {
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><title>Text analyzer</title><style>.complex-2 {
+            color: #03b174;
+        }
+
+        .complex-3 {
             color: #0366b1;
         }
 
-        .medium {
-            color: #6e03b1;
+        .complex-4 {
+            color: #9703b1;
         }
 
-        .complex {
+        .complex-5 {
             color: #b10303;
-        }
-
-        .easy {
-            color: #39a30d;
         }
 
         .item + .item {
@@ -19,7 +19,7 @@
         }
 
         li {
-            padding: 10px 0;
+            padding: 10px 15px 10px 0;
             border-bottom: 1px solid #d4d4d4;
             display: flex;
         }
@@ -33,5 +33,52 @@
         }
 
         .word {
-            width: 200px;
-        }</style><script defer="defer" src="main.js"></script></head><body><div style="display: flex"><textarea id="input-text" rows="20" style="width: 20%"></textarea><div style="display: flex; flex-grow: 1; flex-direction: column;"><div><div>Max word length: <input type="number" id="max-word-length"></div></div><div id="table" style="flex-grow: 1;"></div></div></div></body></html>
+            width: 150px;
+        }
+
+        /*    NEW STYLE*/
+        body {
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .sidebar {
+            width: 30%;
+            max-width: 350px;
+            height: 100vh;
+            flex-shrink: 0;
+            margin-right: 15px;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .filter {
+            padding-top: 15px;
+        }
+
+        .results {
+            overflow-y: scroll;
+            flex-grow: 1;
+        }
+
+        .text {
+            height: 60%;
+            flex-shrink: 0;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+        }</style><script defer="defer" src="main.js"></script></head><body><div class="container"><div class="sidebar"><div class="text"><textarea id="input-text" placeholder="Place text to analyze"></textarea></div><div class="metadata"><ul><li><span class="complex-5">40.000 - 110.000 words</span></li><li><span class="complex-4">30.000 - 40.000 words</span></li><li><span class="complex-3">20.000 - 30.000 words</span></li><li><span class="complex-2">10.000 - 20.000 words</span></li><li><span class="complex-1">10.000 most frequent words</span></li></ul></div></div><div class="content"><div class="filter"><div>Max word length: <input type="number" id="max-word-length"></div></div><div class="results"><div id="table" style="flex-grow: 1;"></div></div></div></div></body></html>
